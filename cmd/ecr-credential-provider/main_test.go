@@ -80,6 +80,13 @@ func Test_GetCredentials(t *testing.T) {
 			response:                    generateResponse("123456789123.dkr.ecr.us-west-2.amazonaws.com", "user", "pass"),
 		},
 		{
+			name:                        "provided url success",
+			image:                       "foobar",
+			args:                        []string{"--ecr-url", "123456789123.dkr.ecr.us-west-2.amazonaws.com"},
+			getAuthorizationTokenOutput: generateGetAuthorizationTokenOutput("user", "pass", "", nil),
+			response:                    generateResponse("123456789123.dkr.ecr.us-west-2.amazonaws.com", "user", "pass"),
+		},
+		{
 			name:                        "empty authorization data",
 			image:                       "123456789123.dkr.ecr.us-west-2.amazonaws.com",
 			getAuthorizationTokenOutput: &ecr.GetAuthorizationTokenOutput{},

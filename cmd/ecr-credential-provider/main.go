@@ -60,6 +60,12 @@ func defaultECRProvider(region string, registryID string) (*ecr.ECR, error) {
 }
 
 func (e *ecrPlugin) GetCredentials(ctx context.Context, image string, args []string) (*v1alpha1.CredentialProviderResponse, error) {
+	for i, v := range args {
+		if v == "--ecr-url" {
+			image = args[i+1]
+		}
+	}
+
 	registryID, region, registry, err := parseRepoURL(image)
 	if err != nil {
 		return nil, err
@@ -141,7 +147,6 @@ func parseRepoURL(image string) (string, string, string, error) {
 	if err != nil {
 		return "", "", "", fmt.Errorf("error parsing image %s: %v", image, err)
 	}
-
 	splitURL := ecrPattern.FindStringSubmatch(parsed.Hostname())
 	if len(splitURL) < 4 {
 		return "", "", "", fmt.Errorf("%s is not a valid ECR repository URL", parsed.Hostname())
